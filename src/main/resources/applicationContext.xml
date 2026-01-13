@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-5.3.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-5.3.xsd">
+
+    <!-- 1. 加载数据库配置文件 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+
+    <!-- 2. 配置HikariCP数据源（替代DBCP，适配MySQL 8.0 + JDK 24） -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maximumPoolSize" value="${jdbc.maximumPoolSize}"/>
+        <property name="minimumIdle" value="${jdbc.minimumIdle}"/>
+        <property name="connectionTimeout" value="${jdbc.connectionTimeout}"/>
+    </bean>
+
+    <!-- 3. 配置SqlSessionFactory（MyBatis核心） -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 配置MyBatis映射文件路径（后续创建） -->
+        <property name="mapperLocations" value="classpath:mybatis/*.xml"/>
+        <!-- 配置实体类别名（简化Mapper.xml中的类名） -->
+        <property name="typeAliasesPackage" value="com.library.bean"/>
+    </bean>
+
+    <!-- 4. 扫描Mapper接口（自动创建实现类） -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.library.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <!-- 5. 扫描Service层（@Service注解） -->
+    <context:component-scan base-package="com.library.service"/>
+</beans>
