@@ -13,7 +13,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan
+@ComponentScan(basePackages = {"com.library"})
 public class WebConfig extends WebMvcConfigurationSupport {
     //视图解析器
     @Bean
