@@ -1,6 +1,5 @@
 package com.library.service;
 
-import com.library.bean.ReaderCard;
 import com.library.bean.ReaderInfo;
 import com.library.dao.ReaderInfoDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class ReaderIndoService {
+public class ReaderInfoService {
     @Autowired
     private ReaderInfoDao readerInfoDao;
 
